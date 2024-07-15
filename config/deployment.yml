@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: strapi-boilerplate
+  labels:
+    app: strapi-boilerplate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: strapi-boilerplate
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: strapi-boilerplate
+    spec:
+      containers:
+      - name: strapi-boilerplate
+        image: <IMAGE>
+        ports:
+        - containerPort: 1337
+        resources:
+          requests:
+            cpu: 100m
+          limits:
+            cpu: 100m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: strapi-boilerplate-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      protocol: TCP
+      port: 1337
+      targetPort: 1337
+  selector:
+    app: strapi-boilerplate
